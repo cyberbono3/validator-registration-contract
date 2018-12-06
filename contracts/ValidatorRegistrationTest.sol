@@ -75,7 +75,7 @@ contract ValidatorRegistrationTest {
 
     
 
-    function deposit(bytes depositParams) 
+    function deposit(bytes memory depositParams) 
       public 
       payable
     {
@@ -90,7 +90,7 @@ contract ValidatorRegistrationTest {
         
     }
 
-    function getReceiptRoot() public view returns (bytes) {
+    function getReceiptRoot() public view returns (bytes memory) {
         return receiptTree[1];
     }
 
