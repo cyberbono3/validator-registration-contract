@@ -43,9 +43,9 @@ contract("ValidatorRegistrationTest", async (accounts) => {
         assert.equal(output, concatStr, "addedHexInput and output are not equal" )
 
 
-       
-
     });
+
+    
 
 
 
