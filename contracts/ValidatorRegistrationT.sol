@@ -4,7 +4,7 @@ import "./SafeMath.sol";
 
 
 
-contract ValidatorRegistration {
+contract ValidatorRegistrationT {
 
     uint public constant DEPOSIT_SIZE = 32 ether;
     uint public constant DEPOSITS_FOR_CHAIN_START = 8;

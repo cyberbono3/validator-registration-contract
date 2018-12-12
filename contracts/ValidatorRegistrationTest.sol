@@ -44,7 +44,9 @@ contract ValidatorRegistrationTest {
     //    'randao_commitment`: 'hash32'
     // }
 
-   
+    /* @dev
+        public for testing purposes
+    */
     function  initializeDeposit(bytes memory depositParams, uint amount) private returns(bytes memory, uint) {
         totalDepositCount++;
         uint index = totalDepositCount + 2 ** MERKLE_TREE_DEPTH;
@@ -54,7 +56,7 @@ contract ValidatorRegistrationTest {
         emit HashChainValue(receiptTree[1], depositParams, totalDepositCount);
         return (depositData, index);
     }
-
+     
     //who pays for a gas? due to high amount of iterations 2**16 function might fail witrh "out of gas"
     function computeReceiptTree(bytes memory depositData, uint index) private {
         receiptTree[index] = abi.encodePacked(keccak256(depositData));

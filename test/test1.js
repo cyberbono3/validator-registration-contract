@@ -9,8 +9,11 @@ function getRandomInt(min, max) {
 
 contract("ValidatorRegistrationTest", async (accounts) => {
     var ValidatorRegistration = getInstance('ValidatorRegistrationTest', accounts[0] );
+    const amount = web3_1_0.utils.toWei('32', 'ether');
+  
 
-    
+
+
     it("toBytes()", async() => {
         const instance = await ValidatorRegistration.deploy().send();
         let input = getRandomInt(0,10**9)
@@ -40,16 +43,43 @@ contract("ValidatorRegistrationTest", async (accounts) => {
         console.log(output, "output")
         console.log(concatStr, "concat")
 
-        assert.equal(output, concatStr, "addedHexInput and output are not equal" )
-
-
+        assert.equal(output, concatStr, "addedHexInput and output do not match" )
     });
 
+     //take output arbitrary bytes array  declared in the previous test and 32 ETH
+    it("getReceiptRoot()", async() => {
+        const instance = await ValidatorRegistration.deploy().send();
+         //await instance.methods.deposit(output).call()
+        let input  = getRandomInt(0,10**9);
+        let bytes =  await instance.methods.toBytes(input).call();
+         console.log(input, "input")
+        console.log(bytes, "bytes")
+
+       
+        let random = getRandomInt(0,9);
+        let result = await instance.methods.deposit(bytes).call({from: accounts[random],value: amount})
+        console.log(result, "result")
+
+        let tx = await instance.methods.deposit(bytes).send({from: accounts[random],value: amount})
+        console.log(tx, "tx")
+        // .on('error', function(error) { console.log(error, "error")})
+        // .on('transactionHash', function(transactionHash){ console.log(transactionHash, "transactionHash") })
+        // .on('receipt', function(receipt) {
+        // console.log(receipt.contractAddress) // contains the new contract address
+        // })
+      
+    });
+
+
+
+
+
+
+
     
 
 
 
-    
 
 
 

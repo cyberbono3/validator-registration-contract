@@ -1,14 +1,20 @@
 pragma solidity ^0.4.23;
-pragma experimental ABIEncoderV2;
+//pragma experimental ABIEncoderV2;
 
-
-/* @dev
-Refactoring relying on spec
-https://github.com/ethereum/eth2.0-specs/blob/master/specs/core/0_beacon-chain.md#vyper-code
-
-*/
 
 contract ValidatorRegistration {
+
+    event HashChainValue(
+        bytes indexed previousReceiptRoot,
+        bytes data,
+        uint totalDepositcount
+    );
+
+    event ChainStart(
+        bytes indexed receiptRoot,
+        bytes time
+    );
+
     uint public constant DEPOSIT_SIZE = 32 ether;
     uint public constant DEPOSITS_FOR_CHAIN_START = 8;
     uint public constant MIN_TOPUP_SIZE = 1 ether;
@@ -19,18 +25,6 @@ contract ValidatorRegistration {
 
     mapping (uint => bytes) public receiptTree;
     uint public totalDepositCount;
-
-    //Deposit
-    event HashChainValue(
-        bytes32 previousReceiptRoot,
-        bytes data,
-        uint totalDepositcount
-    );
-
-    event ChainStart(
-        bytes32 receiptRoot,
-        bytes32 time
-    );
 
     // When users wish to become a validator by moving ETH from
     // 1.0 chian to the 2.0 chain, they should call this function
@@ -50,8 +44,8 @@ contract ValidatorRegistration {
         payable
     {
         uint index = totalDepositCount + 2 ** MERKLE_TREE_DEPTH;
-        bytes32 msgGweiInBytes = toBytes32(msg.value);
-        bytes32 timeStampInBytes = toBytes32(block.timestamp);
+        bytes memory msgGweiInBytes = toBytes(msg.value);
+        bytes memory timeStampInBytes = toBytes(block.timestamp);
         bytes memory depositData = mergeBytes(mergeBytes(msgGweiInBytes, timeStampInBytes), depositParams);
 
         emit HashChainValue(receiptTree[1], depositParams, totalDepositCount);
@@ -83,28 +77,24 @@ contract ValidatorRegistration {
         }
     }
 
-    function getReceiptRoot() public view returns (bytes) {
+    function getReceiptRoot() public view returns (bytes memory) {
         return receiptTree[1];
     }
-
-    // function toBytes(uint x) private constant returns (bytes8) {
-    //     bytes memory b = new bytes(32);
-    //     assembly { mstore(add(b, 8), x) }
-    //     return b;
+    // /*#dev
+    //    for testing purposes 
+    // */
+    //    function getReceipt3() public view returns (bytes memory) {
+    //     return receiptTree[3];
     // }
 
 
-     function toBytes32(uint256 x) private view returns (bytes32) {
-         return bytes32(x)
+    function toBytes(uint x )public pure returns (bytes memory) {
+        bytes memory b = new bytes(32);
+        assembly { mstore(add(b, 32), x) }
+        return b;
     }
 
-
-
-
-   
-
-
-    function mergeBytes(bytes memory a, bytes memory b) private returns (bytes memory c) {
+    function mergeBytes(bytes memory a, bytes memory b) public pure returns (bytes memory c) {
         // Store the length of the first array
         uint alen = a.length;
         // Store the length of BOTH arrays

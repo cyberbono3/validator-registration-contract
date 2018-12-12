@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/cyberbono3/validator-registration-contract#readme",
   "dependencies": {
-    "web3": "^1.0.0-beta.36"
+    "web3": "^1.0.0-beta.37"
   }
 }
