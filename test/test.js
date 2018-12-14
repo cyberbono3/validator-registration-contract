@@ -60,57 +60,35 @@ contract("ValidatorRegistration", async (accounts) => {
 
        
         let random = getRandomInt(0,9);
-        let tx = await instance.methods.deposit(depositParamsBytes).send({from: accounts[random],value: amount})
-        //console.log(tx, "tx")
-       // console.log(tx.transactionHash, "tx.transactionHash")
-        let receiptsTree1 = await instance.methods.getReceiptRoot().call();
+        await instance.methods.deposit(depositParamsBytes).send({from: accounts[random],value: amount})
+        let output = await instance.methods.getReceiptRoot().call();
+        console.log(output, "output")
+        let receiptsTree1 = await instance.methods.receiptTree(1).call();
         console.log(receiptsTree1, "receiptsTree[1]")
-
-        let receiptsTree2 = await instance.methods.receiptTree(2).call();
-        console.log(receiptsTree2, "receiptsTree[2]")
-
-        let receiptsTree3 = await instance.methods.receiptTree(3).call();
-        console.log(receiptsTree3, "receiptsTree[3]")
+        assert.equal(receiptsTree1, output, "getReceiptTree() failed") 
 
 
-        let receiptsTree4 = await instance.methods.receiptTree(4).call();
-        console.log(receiptsTree4, "receiptsTree[4]")
+        /* @dev
+          In order to make comprehensive test of getreceiptTree I intended to compute 
+          receiptTree[1] relying on line 56 of validator_registation.sol
+          receiptTree[index] = abi.encodePacked(keccak256(mergeBytes(receiptTree[index * 2], receiptTree[index * 2 + 1])));
+          It follows, calculatation of receiptTree[1] requires computation of receiptTree[2] and receiptTree[3]
+          receiptTree[1] = abi.encodePacked(keccak256(mergeBytes(receiptTree[2], receiptTree[3])));
+          Conclusevely, 
 
-        let receiptsTree5 = await instance.methods.receiptTree(5).call();
-        console.log(receiptsTree5, "receiptsTree[5]")
+        */
+
+        // let receiptsTree3 = await instance.methods.receiptTree(3).call();
+        // receiptsTree3 is null
+
+
+
+        // let receiptsTree5 = await instance.methods.receiptTree(5).call();
+        // receiptsTree5 is null 
        
         
 
-       
-        
-       //  let mergeBytes = await instance.methods.mergeBytes(receiptsTree2, receiptsTree3).call();
-        // console.log(mergeBytes, "mergeBytes")
-        // //let sha3 = web3_1_0.utils.sha3(mergeBytes).call();
-
-        // console.log(receiptsTree2, "receiptsTree[2]")
-        // console.log(receiptsTree3, "receiptsTree[3]")
-        // console.log(mergeBytes, "mergeBytes")
-        //console.log(sha3, "sha3")
-
-
-
-
-
-
-
-
-
-
-
-
-       // let tx = await instance.methods.deposit(bytes).send({from: accounts[random],value: amount})
-       // console.log(tx, "tx")
-        // .on('error', function(error) { console.log(error, "error")})
-        // .on('transactionHash', function(transactionHash){ console.log(transactionHash, "transactionHash") })
-        // .on('receipt', function(receipt) {
-        // console.log(receipt.contractAddress) // contains the new contract address
-        // })
-      
+    
     });
 
 })
