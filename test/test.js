@@ -70,12 +70,12 @@ contract("ValidatorRegistration", async (accounts) => {
 
         /* @dev
           In order to make comprehensive test of getreceiptTree I intended to compute 
-          receiptTree[1] relying on line 56 of validator_registation.sol
+          receiptTree[1] relying on line 56 in validator_registation.sol
           receiptTree[index] = abi.encodePacked(keccak256(mergeBytes(receiptTree[index * 2], receiptTree[index * 2 + 1])));
           It follows, calculatation of receiptTree[1] requires computation of receiptTree[2] and receiptTree[3]
           receiptTree[1] = abi.encodePacked(keccak256(mergeBytes(receiptTree[2], receiptTree[3])));
-          Conclusevely, 
-
+          Conclusevely, line 55 in validator_registation.sol index = index / 2 results in computation of even receiptTree only
+          This, as you can see below i am unable to compute receiptsTree3 and receiptsTree5
         */
 
         // let receiptsTree3 = await instance.methods.receiptTree(3).call();
